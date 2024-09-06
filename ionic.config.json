@@ -1,0 +1,7 @@
+{
+  "name": "VinylTap",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
