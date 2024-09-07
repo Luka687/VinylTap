@@ -83,7 +83,7 @@ def get_user(id):
 @token_required
 def handle_catalogues():
     if request.method == "POST": 
-        user_id = request.args.get("user_id") or request.form.get("user_id"),
+        user_id = request.user_id,
         user = User.query.get(user_id)
         if not user:
             return jsonify({'error': 'User not found'}), 404
@@ -163,7 +163,7 @@ def handle_catalogue(id):
 @token_required
 def handle_catalogue_items():
     if request.method == 'POST':
-        user_id = request.args.get('user_id')
+        user_id = request.user_id
         record_id = request.args.get('record_id')
         catalogue_id = request.args.get('catalogue_id')
 
