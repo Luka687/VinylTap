@@ -36,7 +36,7 @@ class User(db.Model):
 #### MODEL FOR CATALOGUE #####
 class Catalogue(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(db.ForeignKey('user.id'), nullable=False)
+    user_id: Mapped[int] = mapped_column(db.ForeignKey('user.id'), primary_key=True)
     name: Mapped[str] = mapped_column(nullable=False)
   
     catalogue_items = db.relationship('CatalogueItem', back_populates='catalogue')
