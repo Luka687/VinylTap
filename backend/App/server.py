@@ -1,7 +1,7 @@
 from flask import Flask
 from models import db
 from api import api
-from jwt_handler import encode_jwt_token, encode_refresh_token, decode_refresh_token, token_required, admin_required
+from jwt_handler import encode_jwt_token,token_required, admin_required
 import bcrypt
 from flask_cors import CORS
 

@@ -15,9 +15,11 @@ export class RecordCardComponent implements OnInit{
 
   @Input() id! : number;
   @Input() title: string = 'Album Title';
+  @Input() img_link: string = '';
+  @Input() subtitle: string = 'Artist Name';
   content: string = 'Description';
 
-  constructor(private router: Router) { }
+  constructor(private router: Router) {}
 
   navigateToRecordDetails() {
     if (this.id !== undefined) {
@@ -26,6 +28,9 @@ export class RecordCardComponent implements OnInit{
   }
 
   ngOnInit(){
-    
+    if (this.img_link == null){
+      this.img_link = 'https://ionicframework.com/docs/img/demos/card-media.png';
+    }
+    console.log(this.img_link)   
   }
 }

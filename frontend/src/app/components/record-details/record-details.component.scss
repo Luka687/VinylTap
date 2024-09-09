@@ -1,0 +1,69 @@
+ion-content {
+    padding: 16px;
+  }
+  
+  .record-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    margin-right: 0; // Reset any existing margin-right
+    margin-top: 27%;
+  }
+  
+  .record-details h1,
+  .record-details h2 {
+    margin: 0;
+    padding: 0;
+    margin-left: 10%; // Adjust this value to shift titles to the right
+    text-align: left;
+  }
+  
+  .record-details h1 {
+    font-size: 1.5rem;
+    margin-bottom: 10%;
+  }
+  
+  .record-details h2 {
+    font-size: 1.0rem;
+    color: gray;
+  }
+  
+  .record-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 25%;
+    margin-right: -5%;
+  
+    img {
+      max-width: 150px;
+      height: auto;  
+      border: 2px solid #6a7b8b; // Gray-blue border
+      border-radius: 8px; // Optional: add rounded corners
+    }
+  }
+
+  .desc{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5%;
+
+    p{
+        font-size: 0.8rem;
+        color: gray;
+        text-align: center;
+    }
+  }
+
+  .stars {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5%;
+    font-size: 24px; /* Adjust size as needed */  
+    color: #a1a1a1;
+  }
+  
+  

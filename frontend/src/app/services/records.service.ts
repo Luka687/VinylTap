@@ -25,7 +25,8 @@ export class RecordsService {
           "genre": response.genre,
           "artist": response.artist,
           "year_of_release": response.year_of_release,
-          "rating": response.rating
+          "rating": response.rating,
+          "img_link": response.img_link
         }
       })
     );

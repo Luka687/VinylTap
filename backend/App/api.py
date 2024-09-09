@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from models import db, User, Catalogue, CatalogueItem, Record
-from jwt_handler import encode_jwt_token, encode_refresh_token, decode_refresh_token, token_required, admin_required
+from jwt_handler import encode_jwt_token,token_required, admin_required
 
 api = Blueprint('api', __name__)
 
@@ -28,7 +28,8 @@ def record_get():
         "genre": record.genre,
         "artist": record.artist,
         "year_of_release": record.year_of_release,
-        "rating": record.rating
+        "rating": record.rating,
+        "img_link":record.img_link
         } for record in records]
     return jsonify({"records": records_list}), 200
 
@@ -70,7 +71,8 @@ def get_record(id):
         "genre": record.genre,
         "artist": record.artist,
         "year_of_release": record.year_of_release,
-        "rating": record.rating
+        "rating": record.rating,
+        "img_link":record.img_link
         }), 200
 
 #### USER RELATED FUNCTIONS ####
@@ -294,29 +296,12 @@ def login():
         return jsonify({"message": "Invalid credentials"}), 401
 
     access_token = encode_jwt_token(user.id, user.is_admin)
-    refresh_token = encode_refresh_token(user.id)
 
     return jsonify({
         "access_token": access_token,
-        "refresh_token": refresh_token
     }), 200
 
 @api.route("/logout", methods=["POST"])
 @token_required
 def logout():
     return jsonify({"message": "Logout successful. Please remove the token from client storage."}), 200
-     
-@api.route("/refresh", methods=["GET"])
-def refresh():
-    refresh_token = request.args.get("refresh_token")
-
-    if not refresh_token:
-        return jsonify({"message": "Refresh token is required"}), 400
-
-    payload = decode_refresh_token(refresh_token)
-    if "user_id" not in payload:
-        return jsonify(payload), 403
-
-    user_id = payload['user_id']
-    new_access_token = encode_jwt_token(user_id)
-    return jsonify({"access_token": new_access_token}), 200

@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import{  IonGrid,IonCol,IonRow, 
   IonMenu, IonMenuButton, IonButtons, IonLabel, IonIcon, IonItem, IonList} from '@ionic/angular/standalone';
-import { Observable, of } from 'rxjs';
+import { Observable, of,map } from 'rxjs';
 import { RecordsService } from 'src/app/services/records.service';
 import { RecordCardComponent } from '../record-card/record-card.component';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -21,12 +22,21 @@ import { RecordCardComponent } from '../record-card/record-card.component';
 })
 export class RecordGridComponent  implements OnInit {
 
-  records$: Observable<any[]>;
+  records$: Observable<any[]> = of([]);
+  @Input() name: string = '';
 
-  constructor(private recordService: RecordsService){
-    this.records$ = this.recordService.getRecords();
+  constructor(private recordService: RecordsService, private route: ActivatedRoute){}
+
+  ngOnInit() {
+    const nameParam = this.route.snapshot.queryParamMap.get('name');
+    this.name = nameParam || '';
+    this.records$ = this.getRecordsByName(this.name);
   }
 
-  ngOnInit() {}
+  getRecordsByName(name:string): Observable<any[]>{
+    return this.recordService.getRecords().pipe(
+      map(records => records.filter(record => record.name.toLowerCase().includes(name.toLowerCase())))
+    )
+  }
 
 }

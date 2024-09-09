@@ -17,6 +17,7 @@ class Record(db.Model):
     artist: Mapped[str] = mapped_column(nullable=False)
     year_of_release: Mapped[int] = mapped_column(nullable=False)
     rating: Mapped[float] = mapped_column()
+    img_link: Mapped[str] = mapped_column(nullable=True)
 
     catalogue_items = db.relationship('CatalogueItem', back_populates='record')
 
