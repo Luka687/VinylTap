@@ -14,6 +14,9 @@ class Record(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(nullable=False)
     genre: Mapped[str] = mapped_column(nullable=False)
+    artist: Mapped[str] = mapped_column(nullable=False)
+    year_of_release: Mapped[int] = mapped_column(nullable=False)
+    rating: Mapped[float] = mapped_column()
 
     catalogue_items = db.relationship('CatalogueItem', back_populates='record')
 
@@ -38,6 +41,7 @@ class Catalogue(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(db.ForeignKey('user.id'), primary_key=True)
     name: Mapped[str] = mapped_column(nullable=False)
+    description: Mapped[str] = mapped_column(nullable=True)
   
     catalogue_items = db.relationship('CatalogueItem', back_populates='catalogue')
     user = db.relationship('User', back_populates='catalogues')
@@ -47,6 +51,7 @@ class CatalogueItem(db.Model):
     user_id: Mapped[int] = mapped_column(db.ForeignKey('user.id'), primary_key=True)
     record_id: Mapped[int] = mapped_column(db.ForeignKey('record.id'), primary_key=True)
     catalogue_id: Mapped[int] = mapped_column(db.ForeignKey('catalogue.id'), primary_key=True)
+    user_rating: Mapped[int] = mapped_column(nullable = True)
 
     catalogue = db.relationship('Catalogue', back_populates='catalogue_items')
     record = db.relationship('Record', back_populates='catalogue_items')

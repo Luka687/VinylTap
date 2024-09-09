@@ -1,0 +1,7 @@
+<ion-grid>
+  <ion-row>
+    <ion-col size="6" size-md="4" size-lg="2" *ngFor="let record of records$ | async">
+      <app-record-card [title]="record.name" [id] = "record.id"></app-record-card>
+    </ion-col>
+  </ion-row>
+</ion-grid>

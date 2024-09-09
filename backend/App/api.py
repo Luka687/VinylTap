@@ -8,23 +8,31 @@ api = Blueprint('api', __name__)
 def hello_world():
     return "<p>Hello, World!</p>"
 
-@api.route("/records", methods = ["POST", "GET"])
+@api.route("/records", methods = ["POST"])
 @admin_required
-def record_create():
-    if request.method == "POST":      
-        record = Record(
-            name=request.args.get("name") or request.form.get("name"),
-            genre=request.args.get("genre") or request.form.get("genre"))
-        db.session.add(record)
-        db.session.commit()
-        return jsonify({"message": "Record created successfully", "record": record.name, "genre": record.genre}), 201
+def record_create():    
+    record = Record(
+        name=request.args.get("name") or request.form.get("name"),
+        genre=request.args.get("genre") or request.form.get("genre"))
+    db.session.add(record)
+    db.session.commit()
+    return jsonify({"message": "Record created successfully", "record": record.name, "genre": record.genre}), 201  
+        
     
-    if request.method == "GET":   
-        records = Record.query.get().all()
-        records_list = [{"id": record.id, "name": record.name, "genre": record.genre} for record in records]
-        return jsonify({"records": records_list}), 200
-    
-@api.route("/records/<int:id>", methods = ["GET", "DELETE", "PATCH"])
+@api.route("/records", methods = ["GET"])
+def record_get():
+    records = Record.query.all()
+    records_list = [{
+        "id": record.id,
+        "name": record.name, 
+        "genre": record.genre,
+        "artist": record.artist,
+        "year_of_release": record.year_of_release,
+        "rating": record.rating
+        } for record in records]
+    return jsonify({"records": records_list}), 200
+
+@api.route("/records/<int:id>", methods = ["DELETE", "PATCH"])
 @admin_required
 def handle_record(id):
     record = Record.query.get(id)
@@ -34,20 +42,36 @@ def handle_record(id):
             'message': f'No record found with id {id}'
         }), 404
     
-    if request.method == "GET":
-        return jsonify({"message": "Record retrieved successfully", "record": record.name, "genre": record.genre}), 200
-    
     if request.method == "DELETE":
         db.session.delete(record)
         db.session.commit()
-
         return jsonify({"message": "Record deleted successfully", "record": record.name, "genre": record.genre}), 200
     
     if request.method == "PATCH":
         record.name=request.args.get("name") or request.form.get("name")
         record.genre=request.args.get("genre") or request.form.get("genre")
+        record.year_of_release=request.args.get("year_of_release") or request.form.get("year_of_release")
+        record.artist=request.args.get("artist") or request.form.get("artist")
         db.session.commit()
         return jsonify({"message": "Record edited successfully", "record": record.name, "genre": record.genre}), 200
+    
+@api.route("/records/<int:id>", methods = ["GET"])
+def get_record(id):
+    record = Record.query.get(id)
+    if record is None:
+        return jsonify({
+            'error': 'Record not found',
+            'message': f'No record found with id {id}'
+        }), 404
+    return jsonify({
+        "message": "Record retrieved successfully", 
+        "id": record.id,
+        "name": record.name, 
+        "genre": record.genre,
+        "artist": record.artist,
+        "year_of_release": record.year_of_release,
+        "rating": record.rating
+        }), 200
 
 #### USER RELATED FUNCTIONS ####
 @api.route('/users', methods=['GET'])
@@ -149,7 +173,8 @@ def handle_catalogue(id):
         return jsonify(result), 200
     
     if request.method == 'PATCH':
-        catalogue.name = request.args.get("name") or request.form.get("name")  
+        catalogue.name = request.args.get("name") or request.form.get("name")
+        catalogue.description = request.args.get("description") or request.form.get("description")   
         db.session.commit()
         return jsonify({"message": "Catalogue retrieved successfully", "catalogue": catalogue.name, "user": catalogue.user_id}), 200
 
