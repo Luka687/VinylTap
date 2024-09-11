@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonList, IonItem, IonLabel } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-record-card',
@@ -19,11 +20,19 @@ export class RecordCardComponent implements OnInit{
   @Input() subtitle: string = 'Artist Name';
   content: string = 'Description';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   navigateToRecordDetails() {
     if (this.id !== undefined) {
-      this.router.navigate(['/record', this.id]);
+      if (this.authService.isLoggedIn() && this.authService.getUserIsAdmin()){
+        this.router.navigate(['/admin', this.id]);
+      }
+      else if (this.authService.isLoggedIn() && !this.authService.getUserIsAdmin()){
+        this.router.navigate(['/rate', localStorage.getItem('user_id'), this.id]);
+      }
+      else{
+        this.router.navigate(['/record', this.id]);
+      }
     }
   }
 

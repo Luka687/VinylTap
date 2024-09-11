@@ -28,9 +28,15 @@ export class RecordGridComponent  implements OnInit {
   constructor(private recordService: RecordsService, private route: ActivatedRoute){}
 
   ngOnInit() {
-    const nameParam = this.route.snapshot.queryParamMap.get('name');
-    this.name = nameParam || '';
-    this.records$ = this.getRecordsByName(this.name);
+    this.route.queryParamMap.subscribe(params => {
+      const nameParam = params.get('name');
+      if (nameParam === null || nameParam.trim() === '') {
+        this.name = '';
+      } else {
+        this.name = nameParam;
+      }
+      this.records$ = this.getRecordsByName(this.name);
+    });
   }
 
   getRecordsByName(name:string): Observable<any[]>{

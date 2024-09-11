@@ -59,6 +59,12 @@ ion-content {
     }
   }
 
+  .button-class{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   .stars {
     display: flex;
     justify-content: center;
@@ -66,6 +72,7 @@ ion-content {
     margin-top: 5%;
     font-size: 24px; /* Adjust size as needed */  
     color: #a1a1a1;
+    margin-bottom: 5%;
   }
   
   

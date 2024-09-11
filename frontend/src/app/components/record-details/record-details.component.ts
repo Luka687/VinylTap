@@ -18,7 +18,7 @@ import { addIcons } from 'ionicons';
     IonGrid,IonCol,IonRow,IonContent,
     IonIcon
   ]
-})
+}) 
 export class RecordDetailsComponent  implements OnInit {
   record$: Observable<any>;
 

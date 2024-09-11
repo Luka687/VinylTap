@@ -16,8 +16,9 @@ class Record(db.Model):
     genre: Mapped[str] = mapped_column(nullable=False)
     artist: Mapped[str] = mapped_column(nullable=False)
     year_of_release: Mapped[int] = mapped_column(nullable=False)
-    rating: Mapped[float] = mapped_column()
     img_link: Mapped[str] = mapped_column(nullable=True)
+    rating: Mapped[float] = mapped_column(nullable=False)
+    num_of_rating: Mapped[int] = mapped_column(nullable=False)
 
     catalogue_items = db.relationship('CatalogueItem', back_populates='record')
 
@@ -36,6 +37,15 @@ class User(db.Model):
 
     catalogues = db.relationship('Catalogue', back_populates='user')
     catalogue_items = db.relationship('CatalogueItem', back_populates='user')
+
+#### MODEL FOR RATINGS ####
+class Rating(db.Model):
+    __tablename__ = 'ratings'
+
+    record_id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(primary_key=True)
+    rating: Mapped[float] = mapped_column(nullable=False)
+
 
 #### MODEL FOR CATALOGUE #####
 class Catalogue(db.Model):

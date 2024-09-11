@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 
 @Injectable({
@@ -31,4 +31,55 @@ export class RecordsService {
       })
     );
   }
+
+    // Method to create a new record
+    createRecord(name: string, year: number, genre: string, artist: string, img_link:string){
+      return this.http.post<{ success: boolean }>(`${this.apiUrl}?name=${name}&genre=${genre}&year_of_release=${year}&artist=${artist}&img_link=${img_link}`, null, {
+        headers: new HttpHeaders({
+          'Authorization': `${localStorage.getItem('token')}`
+        })
+      }).subscribe({
+        next: (response) => {
+          console.log('Post successful:', response);
+        },
+        error: (error) => {
+          console.error('Post failed:', error);
+        }
+      });
+  }
+  
+    // Method to update an existing record
+    updateRecord(id: number, name: string, year: number, genre: string, artist: string, img_link:string){
+      return this.http.patch<{ success: boolean }>(`${this.apiUrl}/${id}?name=${name}&genre=${genre}&year_of_release=${year}&artist=${artist}&img_link=${img_link}`, null, {
+        headers: new HttpHeaders({
+          'Authorization': `${localStorage.getItem('token')}`
+        })
+      }).subscribe({
+        next: (response) => {
+          console.log('Patch successful:', response);
+        },
+        error: (error) => {
+          console.error('Patch failed:', error);
+        }
+      });
+    }
+
+    deleteRecord(id: number){
+      // Construct the URL with the record ID
+      const url = `${this.apiUrl}/${id}`;
+
+      return this.http.delete<{ success: boolean }>(url, {
+        headers: new HttpHeaders({
+          'Authorization': `${localStorage.getItem('token')}`
+        })
+      }).subscribe({
+        next: (response) => {
+          console.log('Patch successful:', response);
+        },
+        error: (error) => {
+          console.error('Patch failed:', error);
+        }
+      });;
+    }
+
 }

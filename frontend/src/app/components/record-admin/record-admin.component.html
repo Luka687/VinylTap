@@ -1,0 +1,31 @@
+<ion-content padding>
+  <form (ngSubmit)="onSubmit()" #recordForm="ngForm">
+    <ion-item>
+      <ion-label position="floating">Name</ion-label>
+      <ion-input [(ngModel)]="name" type="text" name="name" required maxlength="50"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Year</ion-label>
+      <ion-input type="number" [(ngModel)]="year" name="year" required maxlength="20"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Genre</ion-label>
+      <ion-input type="text" [(ngModel)]="genre" name="genre" required maxlength="20"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Artist</ion-label>
+      <ion-input type="text" [(ngModel)]="artist" name="artist" required maxlength="20"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Image Link</ion-label>
+      <ion-input type="url" [(ngModel)]="img_link" name="img_link" required maxlength="500"></ion-input>
+    </ion-item>
+
+    <ion-button expand="full" type="submit" [disabled]="!recordForm.form.valid">Submit</ion-button>
+  </form>
+  <ion-button expand="full" *ngIf="!this.addMode" (click) = deleteRecord()>Delete</ion-button>
+</ion-content>

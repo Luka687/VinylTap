@@ -9,26 +9,47 @@ import { Observable } from 'rxjs';
 export class AuthService {
   private apiUrl = 'http://localhost:5000/api'; // Flask API URL
   private token: string | null = null;
-  private isAdmin: boolean = false; // Renamed from isAdmin
+  private isAdmin: boolean = false;
+  private user_id: number = 0;
 
-  constructor(private http: HttpClient, private router: Router) {}
 
-  // Login method using query parameters
+  constructor(private http: HttpClient, private router: Router) {
+    if(localStorage.getItem('userIsAdmin') == undefined){
+      localStorage.setItem('userIsAdmin', JSON.stringify(this.isAdmin));
+    }  
+  }
+
   login(username: string, password: string) {
-    const params = new HttpParams().set('username', username).set('password', password);
-    this.http.get<{ token: string, is_admin: boolean }>(`${this.apiUrl}/login`, { params })
+    const params = new HttpParams()
+    .set('username', username)
+    .set('password', password);
+    
+    this.http.get<{ token: string, is_admin: boolean, user_id: number }>(`${this.apiUrl}/login`, { params })
       .subscribe(response => {
         this.token = response.token;
-        this.isAdmin = response.is_admin; // Updated variable name
+        this.isAdmin = response.is_admin;
+        this.user_id = response.user_id;
         localStorage.setItem('token', this.token);
-        localStorage.setItem('userIsAdmin', JSON.stringify(this.isAdmin)); // Updated key name
+        localStorage.setItem('userIsAdmin', JSON.stringify(this.isAdmin));
+        localStorage.setItem('user_id', JSON.stringify(this.user_id));
         this.router.navigate(['/']);
       });
   }
 
-  register(username: string, password: string): Observable<any> {
-    const params = new HttpParams().set('username', username).set('password', password);
-    return this.http.post<{ success: boolean }>(`${this.apiUrl}/register`, params);
+  register(username: string, password: string){
+    const params = new HttpParams()
+      .set('username', username)
+      .set('password', password);
+    
+    this.http.post<{ success: boolean }>(`${this.apiUrl}/register`, null, { params })
+      .subscribe({
+        next: (response) => {
+          console.log('Registration successful:', response);
+        },
+        error: (error) => {
+          console.error('Registration failed:', error);
+        }
+      });
   }
 
   // Check if user is logged in
@@ -37,16 +58,17 @@ export class AuthService {
   }
 
   // Get user admin status
-  getUserIsAdmin(): boolean { // Renamed method
-    return JSON.parse(localStorage.getItem('userIsAdmin') || 'false'); // Updated key name
+  getUserIsAdmin(): boolean {
+    return JSON.parse(localStorage.getItem('userIsAdmin') || 'false');
   }
 
   // Logout method
   logout() {
     this.token = null;
-    this.isAdmin = false; // Updated variable name
+    this.isAdmin = false;
     localStorage.removeItem('token');
-    localStorage.removeItem('userIsAdmin'); // Updated key name
-    this.router.navigate(['/login']);
+    localStorage.removeItem('userIsAdmin');
+    localStorage.removeItem('user_id');
+    this.router.navigate(['/']);
   }
 }

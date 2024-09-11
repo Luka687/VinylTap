@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from './guards/auth.guard';
+import { AdminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -17,7 +19,7 @@ export const routes: Routes = [
   },
   {
     path: 'records',
-    loadComponent: () => import('./components/record-grid/record-grid.component').then(m => m.RecordGridComponent),
+    loadComponent: () => import('./components/record-grid/record-grid.component').then(m => m.RecordGridComponent)
   },
   {
     path: 'records/search',
@@ -27,5 +29,16 @@ export const routes: Routes = [
   {
     path: 'login',
     loadComponent: () => import('./components/login/login.component').then(m => m.LoginComponent)
+  },
+  {
+    path: 'rate/:user_id/:record_id',
+    loadComponent: () => import('./components/record-user/record-user.component').then(m => m.RecordUserComponent),
+    canActivate: [AuthGuard]
+  }
+  ,
+  {
+    path: 'admin/:record_id',
+    loadComponent: () => import('./components/record-admin/record-admin.component').then(m => m.RecordAdminComponent),
+    canActivate: [AdminGuard]
   }
 ];

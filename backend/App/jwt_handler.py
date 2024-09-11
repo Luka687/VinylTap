@@ -4,7 +4,6 @@ from functools import wraps
 
 def encode_jwt_token(user_id: int, is_admin: bool) -> str:
     with current_app.app_context():
-        # Create a token without expiration
         return jwt.encode({'user_id': user_id, 'is_admin': is_admin}, current_app.config['SECRET_KEY'], algorithm='HS256')
 
 def decode_jwt_token(token: str) -> dict:
